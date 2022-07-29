@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Order Taking App</title>
+
+    <meta name="author" content="Emperor of Bluegaria (Jack H.)" />
+    <meta name="description" content="Simple custom order taking app made for a friend" />
+    <meta name="theme-color" content="#334ccc" />
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon" />
+
+    <link rel="stylesheet" href="/assets/css/index.css" />
+    <script src="/assets/scripts/index.js" defer type="module"></script>
+    <script src="/assets/libs/fontawesome/fontawesome.js" async data-keep-original-source="false"></script>
+    <script src="/assets/libs/fontawesome/solid.min.js" async></script>
+    <script src="/assets/libs/fontawesome/brands.min.js" async></script>
+  </head>
+  <body class="editing">
+    <header>
+      <h1>Menu</h1>
+    </header>
+
+    <div class="order-details">
+      <div class="order-details__container" role="dialog">
+        <button class="close" title="Close dialogue"><i class="fa-solid fa-xmark"></i></button>
+        <h2>Order Details</h2>
+        <template id="order-item-template">
+          <li class="order-details__item">
+            <h4 data-name>Item name</h4>
+            <p>
+              <span data-quantity>Quantity</span>
+              <span>×</span>
+              <span data-price>$0.00</span>
+            </p>
+            <button class="remove">
+              <i class="fa-solid fa-square-xmark"></i>
+            </button>
+          </li>
+        </template>
+        <ul class="order-details__list">
+          <!-- Items here are dynamically generated -->
+        </ul>
+      </div>
+    </div>
+
+    <button class="edit" title="Finish editing"><i class="fa-solid fa-check"></i></button>
+
+    <div class="info-bar use-mode">
+      <button class="view-order">View Order</button>
+      <div class="info-bar__cost">
+        <h2 data-cost>$0.00</h2>
+        <p>Total cost</p>
+      </div>
+    </div>
+
+    <main>
+      <input type="text" name="search" id="search" class="menu-search" placeholder="Search menu..." />
+
+      <template id="menu-item-template">
+        <li class="menu__item">
+          <h3 data-name>Item name</h3>
+          <!-- <input class="use-mode" type="text" name="menu-edit-name" id="menu-edit-name" maxlength="128" /> -->
+          <p data-price>Price</p>
+          <!-- <input class="use-mode" type="text" name="menu-edit-price" id="menu-edit-price" min="0" max="10000000" step=".01" /> -->
+          <div class="menu__item-actions">
+            <button data-pin title="Pin item"><i class="fa-solid fa-thumbtack"></i></button>
+            <button class="use-mode" data-add title="Add item"><i class="fa-solid fa-plus"></i></button>
+            <button class="edit-mode" data-edit title="Edit item"><i class="fa-solid fa-pen"></i></button>
+            <button class="edit-mode" data-delete title="Delete item"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </li>
+      </template>
+      <ul class="menu">
+        <!-- Menu items are dynamically loaded/generated -->
+      </ul>
+
+      <form class="menu-item-creation edit-mode">
+        <div class="menu-item-creation__inputs">
+          <input type="text" name="menu-item-new-name" id="menu-item-new-name" placeholder="Item name..." required maxlength="128" />
+          <input type="number" name="menu-item-new-price" id="menu-item-new-price" placeholder="Price" required min="0" max="10000000" step=".01" />
+        </div>
+        <button class="create edit-mode" type="submit">Create Item</button>
+      </form>
+    </main>
+
+    <footer class="footer">
+      <p>Made with 💙 by Jack</p>
+    </footer>
+  </body>
+</html>
