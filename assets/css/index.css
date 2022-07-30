@@ -383,6 +383,11 @@ button.edit {
   background-color: var(--clr-green);
 }
 
+.menu__item--editing .menu__item-actions [data-delete],
+.menu__item--editing .menu__item-actions [data-pin] {
+  display: none;
+}
+
 .menu-item-creation {
   display: flex;
   flex-direction: column;

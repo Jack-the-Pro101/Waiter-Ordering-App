@@ -146,7 +146,11 @@ function createMenuItem(itemName = "", itemPrice = 0, itemId = "") {
   itemName = itemName.toLowerCase();
 
   const itemElem = item.querySelector(".menu__item");
+  const editBtn = item.querySelector("[data-edit]");
   const pinBtn = itemElem.querySelector("[data-pin]");
+
+  const nameInput = itemElem.querySelector("#menu-edit-name");
+  const priceInput = itemElem.querySelector("#menu-edit-price");
 
   itemElem.dataset.name = itemName;
   itemElem.dataset.price = itemPrice;
@@ -165,14 +169,43 @@ function createMenuItem(itemName = "", itemPrice = 0, itemId = "") {
     updateTotalCost();
   });
 
-  item.querySelector("[data-edit]").addEventListener("click", () => {
-    itemElem.classList.add("menu__item--editing");
+  editBtn.addEventListener("click", () => {
+    if (itemElem.classList.contains("menu__item--editing")) {
+      // Save
 
-    const nameInput = itemElem.querySelector("#menu-edit-name");
-    const priceInput = itemElem.querySelector("#menu-edit-price");
+      itemElem.classList.remove("menu__item--editing");
 
-    nameInput.value = menuManager.menu[itemId].name;
-    priceInput.value = menuManager.menu[itemId].price;
+      editBtn.innerHTML = `<i class="fa-solid fa-pen"></i>`;
+
+      menuManager.edit(itemId, {
+        name: nameInput.value,
+        price: priceInput.value,
+      });
+
+      itemElem.dataset.name = nameInput.value;
+      itemElem.dataset.price = priceInput.value;
+
+      itemElem.querySelector("[data-name]").innerText = nameInput.value;
+      itemElem.querySelector("[data-price]").innerText = `${currencyFormatters.CAD.format(priceInput.value)}`;
+
+      editBtn.blur();
+
+      updateTotalCost();
+    } else {
+      // Edit
+
+      itemElem.classList.add("menu__item--editing");
+
+      editBtn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+
+      nameInput.value = menuManager.menu[itemId].name;
+      priceInput.value = menuManager.menu[itemId].price;
+
+      nameInput.placeholder = menuManager.menu[itemId].name;
+      priceInput.placeholder = menuManager.menu[itemId].price;
+
+      nameInput.focus();
+    }
   });
 
   item.querySelector("[data-add]").addEventListener("click", () => {
@@ -247,9 +280,7 @@ searchBar.addEventListener("input", (e) => {
 
 const menuSaveData = load("menuData");
 
-if (menuSaveData !== false && Object.entries(menuSaveData).length > 0) {
-  changeAppMode(!editing);
-
+function loadSavedMenu(menuSaveData) {
   for (const key in menuSaveData) {
     const item = menuSaveData[key];
 
@@ -269,6 +300,12 @@ if (menuSaveData !== false && Object.entries(menuSaveData).length > 0) {
       }
     }
   }
+}
+
+if (menuSaveData !== false && menuSaveData != null && Object.entries(menuSaveData).length > 0) {
+  changeAppMode(!editing);
+
+  loadSavedMenu(menuSaveData);
 } else {
   const nothingElem = document.createElement("li");
   nothingElem.classList.add("menu__item", "nothing");

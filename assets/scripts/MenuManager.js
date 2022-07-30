@@ -18,6 +18,11 @@ export default class {
     return { itemId: uuid, populateElement };
   }
 
+  edit(id, item = {}) {
+    this.menu[id].name = item.name;
+    this.menu[id].price = item.price;
+  }
+
   remove(id = "") {
     this.menu[id].element.remove();
     delete this.menu[id];
