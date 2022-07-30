@@ -51,6 +51,9 @@
         <ul class="order-details__list">
           <!-- Items here are dynamically generated -->
         </ul>
+        <div class="order-details__btns">
+          <button class="order-details__finish">Clear Order</button>
+        </div>
       </div>
     </div>
 
@@ -70,9 +73,9 @@
       <template id="menu-item-template">
         <li class="menu__item">
           <h3 data-name>Item name</h3>
-          <!-- <input class="use-mode" type="text" name="menu-edit-name" id="menu-edit-name" maxlength="128" /> -->
+          <input class="use-mode menu__edit-input" type="text" name="menu-edit-name" id="menu-edit-name" maxlength="128" />
           <p data-price>Price</p>
-          <!-- <input class="use-mode" type="text" name="menu-edit-price" id="menu-edit-price" min="0" max="10000000" step=".01" /> -->
+          <input class="use-mode menu__edit-input" type="number" name="menu-edit-price" id="menu-edit-price" min="0" step=".01" />
           <div class="menu__item-actions">
             <button data-pin title="Pin item"><i class="fa-solid fa-thumbtack"></i></button>
             <button class="use-mode" data-add title="Add item"><i class="fa-solid fa-plus"></i></button>
@@ -88,7 +91,7 @@
       <form class="menu-item-creation edit-mode">
         <div class="menu-item-creation__inputs">
           <input type="text" name="menu-item-new-name" id="menu-item-new-name" placeholder="Item name..." required maxlength="128" />
-          <input type="number" name="menu-item-new-price" id="menu-item-new-price" placeholder="Price" required min="0" max="10000000" step=".01" />
+          <input type="number" name="menu-item-new-price" id="menu-item-new-price" placeholder="Price" required min="0" step=".01" />
         </div>
         <button class="create edit-mode" type="submit">Create Item</button>
       </form>

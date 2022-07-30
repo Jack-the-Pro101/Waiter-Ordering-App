@@ -6,16 +6,22 @@ export default class {
     this.order = {};
   }
 
-  add(item = {}, callback) {
-    const uuid = uuidv4();
+  add(id, item = {}) {
+    const uuid = id ?? uuidv4();
 
     this.menu[uuid] = item;
 
-    return uuid;
+    const populateElement = (element) => {
+      this.menu[uuid].element = element;
+    };
+
+    return { itemId: uuid, populateElement };
   }
 
   remove(id = "") {
+    this.menu[id].element.remove();
     delete this.menu[id];
+    delete this.order[id];
   }
 
   addOrder(id) {
@@ -33,8 +39,9 @@ export default class {
   }
 
   removeOneOrder(id) {
-    const item = this.order[id];
-    if (item == null) return false;
+    const newQuantity = this.order[id] === 1 ? 0 : --this.order[id];
+    if (newQuantity === 0) delete this.order[id];
+    return newQuantity;
   }
 
   removeOrder(id) {

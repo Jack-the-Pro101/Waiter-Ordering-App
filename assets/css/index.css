@@ -49,6 +49,24 @@ body {
   font-size: 2rem;
 }
 
+i[class^="fa-"] {
+  display: block;
+  margin: 0 auto;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  animation: fa-loading 1s linear infinite alternate;
+}
+
+@keyframes fa-loading {
+  from {
+    background-color: var(--clr-primary-300);
+  }
+  to {
+    background-color: var(--clr-primary-700);
+  }
+}
+
 .editing .use-mode {
   display: none;
 }
@@ -71,6 +89,16 @@ body {
   padding: 2rem;
   background-color: var(--clr-primary-200);
   box-shadow: 0 -2px 8px 1px rgba(0, 0, 0, 0.5);
+  z-index: 5;
+}
+
+.viewing-order-details .info-bar {
+  box-shadow: none;
+  border-radius: 0px;
+}
+
+.info-bar__cost p {
+  text-align: right;
 }
 
 .view-order {
@@ -81,6 +109,12 @@ body {
   padding: 0.2em 0.75em;
   border-radius: 8px;
   cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.view-order:disabled {
+  opacity: 0;
+  cursor: not-allowed;
 }
 
 .order-details {
@@ -89,7 +123,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 4em 0 5em 0;
+  padding: 1em 0 5em 0;
   z-index: -1;
   display: flex;
   align-items: center;
@@ -152,12 +186,34 @@ body {
   padding: 0 4em;
   overflow-y: scroll;
   box-shadow: 0 0 6px 1px inset rgba(0, 0, 0, 0.5);
+  counter-reset: orderList;
+}
+
+.order-details__list.nothing {
+  list-style-type: none;
+}
+
+.order-details__list .nothing {
+  text-align: center;
+  color: var(--clr-neutral-900);
+  font-size: 2.25rem;
+  padding: 1em 0;
 }
 
 .order-details__item {
   display: flex;
   justify-content: space-between;
   margin: 1em 0;
+  counter-increment: orderList;
+  position: relative;
+}
+
+.order-details__item::before {
+  content: counter(orderList) ".";
+  position: absolute;
+  left: -2em;
+  font-size: 2rem;
+  color: var(--clr-neutral-700);
 }
 
 .order-details__item button.remove {
@@ -168,6 +224,21 @@ body {
 }
 
 .order-details__item button.remove {
+  cursor: pointer;
+}
+
+.order-details__btns {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1em;
+}
+
+.order-details__btns button {
+  font-size: 2rem;
+  padding: 0.5em 0.75em;
+  color: var(--clr-neutral-900);
+  border: none;
+  background-color: var(--clr-primary-400);
   cursor: pointer;
 }
 
@@ -246,15 +317,40 @@ button.edit {
   background-color: var(--clr-primary-150);
 }
 
+.menu__item.nothing {
+  display: block;
+  text-align: center;
+  font-size: 2rem;
+  color: var(--clr-neutral-800);
+}
+
 .menu__item.pinned {
   order: -1;
 }
 
-.menu__item h3 {
+.menu__item [data-name] {
   font-weight: 400;
   font-size: 2.1rem;
   word-wrap: break-word;
   word-break: break-all;
+}
+
+.menu__edit-input {
+  border: none;
+  background-color: transparent;
+  font-size: 2rem;
+  color: var(--clr-neutral-900);
+  display: none;
+  flex-grow: 1;
+}
+
+.menu__item--editing .menu__edit-input {
+  display: block;
+}
+
+.menu__item--editing.menu__item [data-name],
+.menu__item--editing.menu__item [data-price] {
+  display: none;
 }
 
 .menu__item-actions {
@@ -318,11 +414,12 @@ button.edit {
 }
 
 .menu-item-creation input[type="text"] {
-  flex-grow: 10;
+  flex-grow: 1;
 }
 
 .menu-item-creation input[type="number"] {
-  flex-grow: 1;
+  width: 15%;
+  min-width: 7ch;
   margin-left: 1em;
 }
 
