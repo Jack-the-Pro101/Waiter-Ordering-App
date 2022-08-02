@@ -4,6 +4,10 @@ export default class {
   constructor() {
     this.menu = {};
     this.order = {};
+
+    this.config = {
+      tax: 0.13,
+    };
   }
 
   add(id, item = {}) {
@@ -40,7 +44,11 @@ export default class {
       ++this.order[id];
     }
 
-    return { item, quantity: this.order[id] };
+    function populateElement(element) {
+      this.order[id].element = element;
+    }
+
+    return { populateElement };
   }
 
   removeOneOrder(id) {
@@ -60,6 +68,10 @@ export default class {
       sum += this.menu[key].price * this.order[key];
     }
 
-    return sum;
+    let ogSum = sum;
+
+    if (this.config.tax > 0) sum *= 1 + this.config.tax;
+
+    return { total: sum, original: ogSum, tax: sum - ogSum };
   }
 }

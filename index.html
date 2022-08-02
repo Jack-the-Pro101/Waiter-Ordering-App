@@ -21,15 +21,40 @@
     <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon" />
 
     <link rel="stylesheet" href="./assets/css/index.css" />
+    <link rel="stylesheet" href="./assets/libs/print.js/print.min.css" />
+
     <script src="./assets/scripts/index.js" defer type="module"></script>
     <script src="./assets/libs/fontawesome/fontawesome.js" async data-keep-original-source="false"></script>
     <script src="./assets/libs/fontawesome/solid.min.js" async></script>
     <script src="./assets/libs/fontawesome/brands.min.js" async></script>
+    <script src="./assets/libs/print.js/print.min.js" async></script>
   </head>
   <body class="editing">
     <header>
       <h1>Menu</h1>
     </header>
+
+    <div class="print-screen" id="printable-table">
+      <template id="print-data-row">
+        <tr class="print-data__row">
+          <td data-name>Test</td>
+          <td data-quantity>21</td>
+          <td data-price>$9999.99</td>
+        </tr>
+      </template>
+      <table class="print-screen__table">
+        <tr>
+          <th>Item Name</th>
+          <th>Quantity</th>
+          <th>Price</th>
+        </tr>
+      </table>
+      <div class="print-screen__footer">
+        <p>Sum: <span data-sum>$0.00</span></p>
+        <p>Tax: <span data-tax>$0.00</span></p>
+        <p>Total Cost: <span data-cost>$0.00</span></p>
+      </div>
+    </div>
 
     <div class="order-details">
       <div class="order-details__container" role="dialog">
@@ -48,10 +73,11 @@
             </button>
           </li>
         </template>
-        <ul class="order-details__list">
+        <ul class="order-details__list" id="order-details-list">
           <!-- Items here are dynamically generated -->
         </ul>
         <div class="order-details__btns">
+          <button class="order-details__print">Print</button>
           <button class="order-details__finish">Clear Order</button>
         </div>
       </div>
@@ -63,6 +89,7 @@
       <button class="view-order">View Order</button>
       <div class="info-bar__cost">
         <h2 data-cost>$0.00</h2>
+        <p data-tax>$0.00</p>
         <p>Total cost</p>
       </div>
     </div>
@@ -90,8 +117,8 @@
 
       <form class="menu-item-creation edit-mode">
         <div class="menu-item-creation__inputs">
-          <input type="text" name="menu-item-new-name" id="menu-item-new-name" placeholder="Item name..." required maxlength="128" />
-          <input type="number" name="menu-item-new-price" id="menu-item-new-price" placeholder="Price" required min="0" step=".01" />
+          <input type="text" name="menu-item-new-name" id="menu-item-new-name" placeholder="Item name..." required maxlength="128" autocomplete="off" />
+          <input type="number" name="menu-item-new-price" id="menu-item-new-price" placeholder="Price" required min="0" step=".01" autocomplete="off" />
         </div>
         <button class="create edit-mode" type="submit">Create Item</button>
       </form>

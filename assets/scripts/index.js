@@ -36,6 +36,19 @@ const currencyFormatters = {
 
 // ---
 
+window.addEventListener(
+  "beforeunload",
+  (e) => {
+    if (editing) {
+      e.preventDefault();
+      return (e.returnValue = "You are still in edit mode and have not saved the menu!");
+    }
+  },
+  { capture: true }
+);
+
+// ---
+
 const menuManager = new MenuManager();
 
 // ---
@@ -57,9 +70,42 @@ const orderDetailsList = document.querySelector(".order-details__list");
 const orderItemTemplate = document.getElementById("order-item-template");
 
 const sumDisplay = document.querySelector(".info-bar [data-cost]");
+const taxDisplay = document.querySelector(".info-bar [data-tax]");
 
 function updateTotalCost() {
-  sumDisplay.innerText = currencyFormatters.CAD.format(menuManager.orderSum);
+  const sum = menuManager.orderSum;
+  sumDisplay.innerText = currencyFormatters.CAD.format(sum.total);
+  taxDisplay.innerText = currencyFormatters.CAD.format(sum.tax);
+}
+
+const printScreen = document.querySelector(".print-screen");
+const printTable = document.querySelector(".print-screen__table");
+const printTableRowTemplate = document.getElementById("print-data-row");
+
+function renderPrintTable() {
+  const printTableRows = printTable.querySelectorAll(".print-data__row");
+
+  printTableRows.forEach((elem) => {
+    elem.remove();
+  });
+
+  for (const key in menuManager.order) {
+    const item = menuManager.menu[key];
+    const quantity = menuManager.order[key];
+
+    const row = printTableRowTemplate.content.cloneNode(true);
+
+    row.querySelector("[data-name]").innerText = item.name;
+    row.querySelector("[data-quantity]").innerText = quantity;
+    row.querySelector("[data-price]").innerText = currencyFormatters.CAD.format(item.price * quantity);
+
+    printTable.querySelector("tbody").appendChild(row);
+  }
+
+  const total = menuManager.orderSum;
+  printScreen.querySelector("[data-tax]").innerText = currencyFormatters.CAD.format(total.tax);
+  printScreen.querySelector("[data-sum]").innerText = currencyFormatters.CAD.format(total.original);
+  printScreen.querySelector("[data-cost]").innerText = currencyFormatters.CAD.format(total.total);
 }
 
 async function renderOrderDetails() {
@@ -119,11 +165,51 @@ async function renderOrderDetails() {
   }
 }
 
-viewOrderBtn.addEventListener("click", async () => {
+orderDetailsElem.querySelector(".order-details__print").addEventListener("click", () => {
+  // const printData = [];
+  // for (const id in menuManager.order) {
+  //   const quantity = menuManager.order[id];
+  //   printData.push({
+  //     name: menuManager.menu[id].name,
+  //     quantity: quantity,
+  //     price: currencyFormatters.CAD.format(menuManager.menu[id].price),
+  //   });
+  // }
+  // printJS({
+  //   type: "json",
+  //   printable: printData,
+  //   properties: ["name", "quantity", "price"],
+  //   header: currencyFormatters.CAD.format(menuManager.orderSum.total),
+  // });
+
+  document.body.classList.add("printing");
+
+  renderPrintTable();
+
+  printJS({
+    type: "html",
+    printable: "printable-table",
+    css: "./assets/css/print.css",
+  });
+
+  document.body.classList.remove("printing");
+});
+
+orderDetailsElem.querySelector(".order-details__finish").addEventListener("click", () => {
+  if (!confirm("Clear Order:\nAre you sure you want to clear the order?")) return;
+  for (const key in menuManager.order) {
+    delete menuManager.order[key];
+  }
+
+  renderOrderDetails();
+  updateTotalCost();
+});
+
+viewOrderBtn.addEventListener("click", () => {
   orderDetailsElem.classList.add("active");
   document.body.classList.add("viewing-order-details");
   viewOrderBtn.disabled = true;
-  await renderOrderDetails();
+  renderOrderDetails();
 });
 closeOrderDetailsBtn.addEventListener("click", () => {
   document.body.classList.remove("viewing-order-details");
